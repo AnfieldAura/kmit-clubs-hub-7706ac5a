@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import kmitLogo from "@/assets/kmit-logo.png";
 
 const Navigation = () => {
@@ -37,7 +38,9 @@ const Navigation = () => {
                 {item.label}
               </a>
             ))}
-            <Button variant="hero">Login</Button>
+            <Button variant="hero" asChild>
+              <Link to="/login">Login</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -67,7 +70,9 @@ const Navigation = () => {
                 </a>
               ))}
               <div className="pt-2">
-                <Button variant="hero" className="w-full">Login</Button>
+                <Button variant="hero" className="w-full" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
               </div>
             </div>
           </div>
