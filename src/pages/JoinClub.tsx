@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, UserPlus, Star, Users, Calendar } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 import mudraImage from "@/assets/mudra-dance.jpg";
 import photographyImage from "@/assets/photography-club.jpg";
 import singingImage from "@/assets/aalap-singing.jpg";
@@ -69,6 +71,9 @@ const clubsData = {
 
 const JoinClub = () => {
   const { clubId } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     rollNumber: "",
@@ -77,6 +82,29 @@ const JoinClub = () => {
     experience: "",
     motivation: ""
   });
+
+  // Check if user is authenticated, if not redirect to login
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required",
+        description: "Please login to join a club",
+        variant: "destructive"
+      });
+      navigate('/login');
+      return;
+    }
+
+    // Pre-fill form with user data if logged in
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name,
+        rollNumber: user.rollNumber,
+        email: user.email
+      }));
+    }
+  }, [isAuthenticated, user, navigate, toast]);
 
   const club = clubId ? clubsData[clubId as keyof typeof clubsData] : null;
 
@@ -101,6 +129,10 @@ const JoinClub = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(`Join ${club.name} form submitted:`, formData);
+    toast({
+      title: "Application Submitted",
+      description: `Your application to join ${club.name} has been submitted successfully!`,
+    });
   };
 
   return (
@@ -195,11 +227,12 @@ const JoinClub = () => {
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Enter your full name"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    required
+                    disabled
+                    className="bg-muted"
                   />
+                  <p className="text-xs text-muted-foreground">Name is taken from your login data</p>
                 </div>
                 
                 <div className="space-y-2">
@@ -207,11 +240,12 @@ const JoinClub = () => {
                   <Input
                     id="rollNumber"
                     type="text"
-                    placeholder="e.g., 21K61A0501"
                     value={formData.rollNumber}
                     onChange={(e) => handleInputChange("rollNumber", e.target.value)}
-                    required
+                    disabled
+                    className="bg-muted"
                   />
+                  <p className="text-xs text-muted-foreground">Roll number is taken from your login data</p>
                 </div>
                 
                 <div className="space-y-2">

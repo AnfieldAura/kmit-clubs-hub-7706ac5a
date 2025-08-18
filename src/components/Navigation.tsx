@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import kmitLogo from "@/assets/kmit-logo.png";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
 
   const navItems = [
     { label: "Home", href: "#home" },
@@ -37,7 +40,16 @@ const Navigation = () => {
                 {item.label}
               </a>
             ))}
-            <Button variant="hero">Login</Button>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-foreground">Welcome, {user?.name}</span>
+                <Button variant="secondary" onClick={logout}>Logout</Button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button variant="hero">Login</Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -67,7 +79,16 @@ const Navigation = () => {
                 </a>
               ))}
               <div className="pt-2">
-                <Button variant="hero" className="w-full">Login</Button>
+                {isAuthenticated ? (
+                  <div className="space-y-2">
+                    <p className="text-foreground text-sm">Welcome, {user?.name}</p>
+                    <Button variant="secondary" onClick={logout} className="w-full">Logout</Button>
+                  </div>
+                ) : (
+                  <Link to="/login">
+                    <Button variant="hero" className="w-full">Login</Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
