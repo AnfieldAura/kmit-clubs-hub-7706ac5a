@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, Calendar, Trophy } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -23,9 +24,11 @@ const HeroSection = () => {
               Explore Clubs
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="secondary" size="lg">
-              Join as Student
-            </Button>
+            <Link to="/join">
+              <Button variant="secondary" size="lg">
+                Join as Student
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
