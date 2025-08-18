@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Calendar, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ClubCardProps {
   id: string;
@@ -16,6 +17,7 @@ interface ClubCardProps {
 }
 
 const ClubCard = ({ 
+  id,
   name, 
   category, 
   description, 
@@ -25,6 +27,7 @@ const ClubCard = ({
   rating, 
   featured = false 
 }: ClubCardProps) => {
+  const clubSlug = name.toLowerCase().replace(/\s+/g, '-');
   return (
     <Card className={`group hover:shadow-glow transition-spring overflow-hidden ${featured ? 'ring-2 ring-primary' : ''}`}>
       <div className="relative overflow-hidden">
@@ -76,9 +79,11 @@ const ClubCard = ({
         <Button variant="default" className="flex-1">
           View Details
         </Button>
-        <Button variant="success" className="flex-1">
-          Join Club
-        </Button>
+        <Link to={`/join-club/${clubSlug}`} className="flex-1">
+          <Button variant="success" className="w-full">
+            Join Club
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
